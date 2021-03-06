@@ -4,7 +4,7 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 import os
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse, urlsplit, unquote
 
 
 def fetch_book_url(url):
@@ -13,12 +13,10 @@ def fetch_book_url(url):
     return response
 
 
-def save_book(filename, response, folder='books'):
-    Path(folder).mkdir(parents=True, exist_ok=True)
-    path = os.path.join(folder, sanitize_filename(filename))
-    with open(f'{path}.txt', 'wb') as file:
-        file.write(response.content)
-    return f'{path}.txt'
+def get_soup(url):
+    response = requests.get(url, verify=False)
+    response.raise_for_status()
+    return BeautifulSoup(response.text, 'lxml')
 
 
 def check_for_redirect(response):
@@ -28,9 +26,8 @@ def check_for_redirect(response):
         pass
 
 
-def get_book_title(soup):
+def fetch_title_and_author(soup):
     title_tag = soup.find('h1').text
-
     if len(title_tag.split('::')) == 2:
         title = title_tag.split('::')[0].strip()
         author = title_tag.split('::')[1].strip()
@@ -46,10 +43,25 @@ def fetch_book_image_url(url, soup):
     return url_image
 
 
-def get_soup(url):
+def download_book_cover(url, folder='img'):
+    Path(folder).mkdir(parents=True, exist_ok=True)
+
+    name = urlsplit(url).path
+    filename = name.split('/')[-1]
+
+    path = os.path.join(folder, sanitize_filename(filename))
     response = requests.get(url, verify=False)
     response.raise_for_status()
-    return BeautifulSoup(response.text, 'lxml')
+    with open(path, 'wb') as file:
+        file.write(response.content)
+
+
+def save_book(filename, response, folder='books'):
+    Path(folder).mkdir(parents=True, exist_ok=True)
+    path = os.path.join(folder, sanitize_filename(filename))
+    with open(f'{path}.txt', 'wb') as file:
+        file.write(response.content)
+    return f'{path}.txt'
 
 
 if __name__ == "__main__":
@@ -62,7 +74,7 @@ if __name__ == "__main__":
         txt_url = f'https://tululu.org/txt.php?id={id}'
         book_url = f'https://tululu.org/b{id}/'
         soup = get_soup(book_url)
-        title, author = get_book_title(soup)
+        title, author = fetch_title_and_author(soup)
         filename = f'{id}. {title}'
         response = fetch_book_url(txt_url)
 
@@ -71,6 +83,7 @@ if __name__ == "__main__":
             image_url = fetch_book_image_url(index_url, soup)
             print('Заголовок', title)
             print(image_url)
+            download_book_cover(image_url)
             # filepath = save_book(filename, response, folder='books')
             # print(filepath)
         except requests.HTTPError:
