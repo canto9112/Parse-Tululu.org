@@ -93,11 +93,12 @@ def parse_book_page(book_url, index_url):
     image_url = fetch_book_image_url(index_url, soup)
     genres = get_genres(soup)
     comments_text = downoload_comment(soup)
-    book_page.update({'Заголовок': title,
-                      'Автор': author,
-                      'ссылка на картинку': image_url,
-                      'жанры': genres,
-                      'комментарии': comments_text})
+
+    book_page.update({'title': title,
+                      'author': author,
+                      'image_link': image_url,
+                      'genres': genres,
+                      'commets': comments_text})
     return book_page
 
 
@@ -110,17 +111,16 @@ if __name__ == "__main__":
         id += 1
         txt_url = f'https://tululu.org/txt.php?id={id}'
         book_url = f'https://tululu.org/b{id}/'
-        #
-        # filename = f'{id}. {title}'
+
         response = fetch_book_url(txt_url)
 
         try:
             check_for_redirect(response)
             parse_book_page(book_url, index_url)
-
-            # download_book_cover(image_url)
-            # save_book(filename, response, folder='books')
-
+            title = parse_book_page(book_url, index_url)['title']
+            image_link = parse_book_page(book_url, index_url)['image_link']
+            filename = f'{id}. {title}'
+            # download_book_cover(image_link)
+            save_book(filename, response, folder='books')
         except requests.HTTPError:
             pass
-
