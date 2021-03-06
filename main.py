@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 import os
 from urllib.parse import urljoin, urlparse, urlsplit, unquote
+from pprint import pprint
 
 
 def fetch_book_url(url):
@@ -74,7 +75,7 @@ def downoload_comment(soup):
             text = comment.split(')')[-1]
             comments_text.append(text)
     else:
-        print('Комментариев нет!')
+        pass
     return comments_text
 
 
@@ -82,7 +83,22 @@ def get_genres(soup):
     title_tag = soup.find_all('span', class_='d_book')
     text = title_tag[0].text.split(':')[-1].strip()
     genres = text.split(',')
-    print(genres)
+    return genres
+
+
+def parse_book_page(book_url, index_url):
+    book_page = {}
+    soup = get_soup(book_url)
+    title, author = fetch_title_and_author(soup)
+    image_url = fetch_book_image_url(index_url, soup)
+    genres = get_genres(soup)
+    comments_text = downoload_comment(soup)
+    book_page.update({'Заголовок': title,
+                      'Автор': author,
+                      'ссылка на картинку': image_url,
+                      'жанры': genres,
+                      'комментарии': comments_text})
+    return book_page
 
 
 if __name__ == "__main__":
@@ -94,23 +110,17 @@ if __name__ == "__main__":
         id += 1
         txt_url = f'https://tululu.org/txt.php?id={id}'
         book_url = f'https://tululu.org/b{id}/'
-        soup = get_soup(book_url)
-        title, author = fetch_title_and_author(soup)
-        filename = f'{id}. {title}'
+        #
+        # filename = f'{id}. {title}'
         response = fetch_book_url(txt_url)
 
         try:
             check_for_redirect(response)
-            image_url = fetch_book_image_url(index_url, soup)
-            print('Заголовок', title)
-            get_genres(soup)
-            # print(image_url)
-            # comments_text = downoload_comment(soup)
-            # for comment in comments_text:
-            #     print(comment)
+            parse_book_page(book_url, index_url)
+
             # download_book_cover(image_url)
-            # filepath = save_book(filename, response, folder='books')
-            # print(filepath)
+            # save_book(filename, response, folder='books')
+
         except requests.HTTPError:
             pass
 
