@@ -14,8 +14,7 @@ def fetch_book_url(url):
 
 def save_book(filename, response, folder='books'):
     Path(folder).mkdir(parents=True, exist_ok=True)
-    sanitized_fname = sanitize_filename(filename)
-    path = os.path.join(folder, sanitized_fname)
+    path = os.path.join(folder, sanitize_filename(filename))
     with open(f'{path}.txt', 'wb') as file:
         file.write(response.content)
     return f'{path}.txt'
@@ -52,12 +51,12 @@ if __name__ == "__main__":
         txt_url = f'https://tululu.org/txt.php?id={id}'
         book_url = f'https://tululu.org/b{id}/'
 
-        filename, author = get_book_title(book_url)
-
+        title, author = get_book_title(book_url)
+        filename = f'{id}. {title}'
         response = fetch_book_url(txt_url)
         try:
             check_for_redirect(response)
-            filepath = save_book(filename, response, folder='txt')
+            filepath = save_book(filename, response, folder='books')
             print(filepath)
         except requests.HTTPError:
             print('requests.HTTPError')
