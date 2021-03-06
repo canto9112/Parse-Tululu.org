@@ -4,6 +4,7 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 import os
+from urllib.parse import urljoin
 
 
 def fetch_book_url(url):
@@ -27,10 +28,7 @@ def check_for_redirect(response):
         pass
 
 
-def get_book_title(url):
-    response = requests.get(url, verify=False)
-    response.raise_for_status()
-    soup = BeautifulSoup(response.text, 'lxml')
+def get_book_title(soup):
     title_tag = soup.find('h1').text
 
     if len(title_tag.split('::')) == 2:
@@ -42,23 +40,39 @@ def get_book_title(url):
     return title, author
 
 
+def fetch_book_image_url(url, soup):
+    title_tag = soup.find('div', class_='bookimage').find('img')['src']
+    url_image = urljoin(url, title_tag)
+    return url_image
+
+
+def get_soup(url):
+    response = requests.get(url, verify=False)
+    response.raise_for_status()
+    return BeautifulSoup(response.text, 'lxml')
+
+
 if __name__ == "__main__":
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+    index_url = 'https://tululu.org/'
 
     id = 0
     for book in range(1, 11):
         id += 1
         txt_url = f'https://tululu.org/txt.php?id={id}'
         book_url = f'https://tululu.org/b{id}/'
-
-        title, author = get_book_title(book_url)
+        soup = get_soup(book_url)
+        title, author = get_book_title(soup)
         filename = f'{id}. {title}'
         response = fetch_book_url(txt_url)
+
         try:
             check_for_redirect(response)
-            filepath = save_book(filename, response, folder='books')
-            print(filepath)
+            image_url = fetch_book_image_url(index_url, soup)
+            print('Заголовок', title)
+            print(image_url)
+            # filepath = save_book(filename, response, folder='books')
+            # print(filepath)
         except requests.HTTPError:
-            print('requests.HTTPError')
-            continue
+            pass
 
