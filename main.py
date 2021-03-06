@@ -64,6 +64,20 @@ def save_book(filename, response, folder='books'):
     return f'{path}.txt'
 
 
+def downoload_comment(soup):
+    title_tag = soup.find_all('div', class_='texts')
+    number_comments = len(title_tag)
+    comments_text = []
+    if title_tag:
+        for number in range(0, number_comments):
+            comment = title_tag[number].text
+            text = comment.split(')')[-1]
+            comments_text.append(text)
+    else:
+        print('Комментариев нет!')
+    return comments_text
+
+
 if __name__ == "__main__":
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     index_url = 'https://tululu.org/'
@@ -83,7 +97,10 @@ if __name__ == "__main__":
             image_url = fetch_book_image_url(index_url, soup)
             print('Заголовок', title)
             print(image_url)
-            download_book_cover(image_url)
+            comments_text = downoload_comment(soup)
+            for comment in comments_text:
+                print(comment)
+            # download_book_cover(image_url)
             # filepath = save_book(filename, response, folder='books')
             # print(filepath)
         except requests.HTTPError:
