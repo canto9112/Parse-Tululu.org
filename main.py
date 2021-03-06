@@ -78,6 +78,13 @@ def downoload_comment(soup):
     return comments_text
 
 
+def get_genres(soup):
+    title_tag = soup.find_all('span', class_='d_book')
+    text = title_tag[0].text.split(':')[-1].strip()
+    genres = text.split(',')
+    print(genres)
+
+
 if __name__ == "__main__":
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     index_url = 'https://tululu.org/'
@@ -96,10 +103,11 @@ if __name__ == "__main__":
             check_for_redirect(response)
             image_url = fetch_book_image_url(index_url, soup)
             print('Заголовок', title)
-            print(image_url)
-            comments_text = downoload_comment(soup)
-            for comment in comments_text:
-                print(comment)
+            get_genres(soup)
+            # print(image_url)
+            # comments_text = downoload_comment(soup)
+            # for comment in comments_text:
+            #     print(comment)
             # download_book_cover(image_url)
             # filepath = save_book(filename, response, folder='books')
             # print(filepath)
