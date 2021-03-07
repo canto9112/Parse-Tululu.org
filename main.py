@@ -6,6 +6,7 @@ from pathvalidate import sanitize_filename
 import os
 from urllib.parse import urljoin, urlparse, urlsplit, unquote
 from pprint import pprint
+import argparse
 
 
 def fetch_book_url(url):
@@ -102,12 +103,30 @@ def parse_book_page(book_url, index_url):
     return book_page
 
 
-if __name__ == "__main__":
+def get_arguments():
+    parser = argparse.ArgumentParser(
+        description='Скрипт скачивает книги с сайта tululu.org'
+    )
+    parser.add_argument('start_id',
+                        help='С какой книги начать скачивание',
+                        type=int,
+                        default=1)
+    parser.add_argument('end_id',
+                        help='Закончить скачивание на этой книге',
+                        type=int,
+                        default=10)
+    args = parser.parse_args()
+    return args.start_id, args.end_id
+
+
+def main():
+    start_id, end_id = get_arguments()
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
     index_url = 'https://tululu.org/'
 
     id = 0
-    for book in range(1, 11):
+    for book in range(start_id, end_id):
         id += 1
         txt_url = f'https://tululu.org/txt.php?id={id}'
         book_url = f'https://tululu.org/b{id}/'
@@ -124,3 +143,7 @@ if __name__ == "__main__":
             save_book(filename, response, folder='books')
         except requests.HTTPError:
             pass
+
+
+if __name__ == "__main__":
+    main()
