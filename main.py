@@ -1,12 +1,12 @@
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
+import argparse
+import os
 from pathlib import Path
+from urllib.parse import urljoin, urlsplit
+
+import requests
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
-import os
-from urllib.parse import urljoin, urlparse, urlsplit, unquote
-from pprint import pprint
-import argparse
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 
 def fetch_book_url(url):
@@ -29,12 +29,12 @@ def check_for_redirect(response):
 
 
 def fetch_title_and_author(soup):
-    title_tag = soup.find('h1').text
-    if len(title_tag.split('::')) == 2:
-        title = title_tag.split('::')[0].strip()
-        author = title_tag.split('::')[1].strip()
+    tag = soup.find('h1').text
+    if len(tag.split('::')) == 2:
+        title = tag.split('::')[0].strip()
+        author = tag.split('::')[1].strip()
     else:
-        title = title_tag.split('::')[0].strip()
+        title = tag.split('::')[0].strip()
         author = 'Нет автора'
     return title, author
 
@@ -107,11 +107,11 @@ def get_arguments():
     parser = argparse.ArgumentParser(
         description='Скрипт скачивает книги с сайта tululu.org'
     )
-    parser.add_argument('start_id',
+    parser.add_argument('--start_id',
                         help='С какой книги начать скачивание',
                         type=int,
                         default=1)
-    parser.add_argument('end_id',
+    parser.add_argument('--end_id',
                         help='Закончить скачивание на этой книге',
                         type=int,
                         default=10)
@@ -125,11 +125,11 @@ def main():
 
     index_url = 'https://tululu.org/'
 
-    id = 0
-    for book in range(start_id, end_id):
-        id += 1
-        txt_url = f'https://tululu.org/txt.php?id={id}'
-        book_url = f'https://tululu.org/b{id}/'
+    for book in range(start_id, end_id + 1):
+        txt_url = f'https://tululu.org/txt.php?id={book}'
+        book_url = f'https://tululu.org/b{book}/'
+
+        print(book)
 
         response = fetch_book_url(txt_url)
 
@@ -138,8 +138,8 @@ def main():
             parse_book_page(book_url, index_url)
             title = parse_book_page(book_url, index_url)['title']
             image_link = parse_book_page(book_url, index_url)['image_link']
-            filename = f'{id}. {title}'
-            # download_book_cover(image_link)
+            filename = f'{book}. {title}'
+            download_book_cover(image_link)
             save_book(filename, response, folder='books')
         except requests.HTTPError:
             pass
