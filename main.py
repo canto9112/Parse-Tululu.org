@@ -113,7 +113,7 @@ def get_arguments():
                         type=int,
                         default=10)
     args = parser.parse_args()
-    return args.start_id, args.end_id
+    return args.start_page, args.end_page
 
 
 def main():
