@@ -9,7 +9,7 @@ from pathvalidate import sanitize_filename
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 
-def fetch_book_url(url):
+def fetch_url_response(url):
     response = requests.get(url, verify=False)
     response.raise_for_status()
     return response
@@ -40,16 +40,16 @@ def fetch_title_and_author(soup):
 
 
 def fetch_book_image_url(url, soup):
-    title_tag = soup.find('div', class_='bookimage').find('img')['src']
-    url_image = urljoin(url, title_tag)
-    return url_image
+    image_url_tag = soup.find('div', class_='bookimage').find('img')['src']
+    image_url = urljoin(url, image_url_tag)
+    return image_url
 
 
 def download_book_cover(url, folder='img'):
     Path(folder).mkdir(parents=True, exist_ok=True)
 
-    name = urlsplit(url).path
-    filename = name.split('/')[-1]
+    cover_path = urlsplit(url).path
+    filename = cover_path.split('/')[-1]
 
     path = os.path.join(folder, sanitize_filename(filename))
     response = requests.get(url, verify=False)
@@ -63,16 +63,15 @@ def save_book(filename, response, folder='books'):
     path = os.path.join(folder, sanitize_filename(filename))
     with open(f'{path}.txt', 'wb') as file:
         file.write(response.content)
-    return f'{path}.txt'
 
 
 def downoload_comment(soup):
-    title_tag = soup.find_all('div', class_='texts')
-    number_comments = len(title_tag)
+    comment_tag = soup.find_all('div', class_='texts')
+    number_comments = len(comment_tag)
     comments_text = []
-    if title_tag:
+    if comment_tag:
         for number in range(0, number_comments):
-            comment = title_tag[number].text
+            comment = comment_tag[number].text
             text = comment.split(')')[-1]
             comments_text.append(text)
     else:
@@ -81,8 +80,8 @@ def downoload_comment(soup):
 
 
 def get_genres(soup):
-    title_tag = soup.find_all('span', class_='d_book')
-    text = title_tag[0].text.split(':')[-1].strip()
+    genres_tag = soup.find_all('span', class_='d_book')
+    text = genres_tag[0].text.split(':')[-1].strip()
     genres = text.split(',')
     return genres
 
@@ -94,7 +93,6 @@ def parse_book_page(book_url, index_url):
     image_url = fetch_book_image_url(index_url, soup)
     genres = get_genres(soup)
     comments_text = downoload_comment(soup)
-
     book_page.update({'title': title,
                       'author': author,
                       'image_link': image_url,
@@ -105,8 +103,7 @@ def parse_book_page(book_url, index_url):
 
 def get_arguments():
     parser = argparse.ArgumentParser(
-        description='Скрипт скачивает книги с сайта tululu.org'
-    )
+                        description='Скрипт скачивает книги с сайта tululu.org')
     parser.add_argument('--start_id',
                         help='С какой книги начать скачивание',
                         type=int,
@@ -125,22 +122,22 @@ def main():
 
     index_url = 'https://tululu.org/'
 
-    for book in range(start_id, end_id + 1):
-        txt_url = f'https://tululu.org/txt.php?id={book}'
-        book_url = f'https://tululu.org/b{book}/'
+    for id in range(start_id, end_id + 1):
+        txt_url = f'https://tululu.org/txt.php?id={id}'
+        book_url = f'https://tululu.org/b{id}/'
 
-        print(book)
-
-        response = fetch_book_url(txt_url)
+        url_response = fetch_url_response(txt_url)
 
         try:
-            check_for_redirect(response)
+            check_for_redirect(url_response)
             parse_book_page(book_url, index_url)
             title = parse_book_page(book_url, index_url)['title']
             image_link = parse_book_page(book_url, index_url)['image_link']
-            filename = f'{book}. {title}'
+            author = parse_book_page(book_url, index_url)['author']
+            filename = f'{id}. {title}'
+
             download_book_cover(image_link)
-            save_book(filename, response, folder='books')
+            save_book(filename, url_response, folder='books')
         except requests.HTTPError:
             pass
 
