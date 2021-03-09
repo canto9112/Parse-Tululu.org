@@ -104,11 +104,11 @@ def parse_book_page(book_url, index_url):
 def get_arguments():
     parser = argparse.ArgumentParser(
                         description='Скрипт скачивает книги с сайта tululu.org')
-    parser.add_argument('--start_id',
+    parser.add_argument('--start_page',
                         help='С какой книги начать скачивание',
                         type=int,
                         default=1)
-    parser.add_argument('--end_id',
+    parser.add_argument('--end_page',
                         help='Закончить скачивание на этой книге',
                         type=int,
                         default=10)
