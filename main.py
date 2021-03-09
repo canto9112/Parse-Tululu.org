@@ -7,6 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from tqdm import trange
 
 
 def fetch_url_response(url):
@@ -122,7 +123,7 @@ def main():
 
     index_url = 'https://tululu.org/'
 
-    for id in range(start_id, end_id + 1):
+    for id in trange(start_id, end_id + 1):
         txt_url = f'https://tululu.org/txt.php?id={id}'
         book_url = f'https://tululu.org/b{id}/'
 
