@@ -1,7 +1,7 @@
 import argparse
 import os
 from pathlib import Path
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import urljoin, urlsplit, unquote
 
 import requests
 from bs4 import BeautifulSoup
@@ -52,9 +52,9 @@ def download_book_cover(url, folder='img'):
     Path(folder).mkdir(parents=True, exist_ok=True)
 
     cover_path = urlsplit(url).path
-    filename = cover_path.split('/')[-1]
+    _, imagename = os.path.split(cover_path)
 
-    path = os.path.join(folder, sanitize_filename(filename))
+    path = os.path.join(folder, sanitize_filename(unquote(imagename)))
     response = requests.get(url, verify=False)
     response.raise_for_status()
     with open(path, 'wb') as file:
