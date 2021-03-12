@@ -73,8 +73,8 @@ def downoload_comment(soup):
     number_comments = len(comment_tag)
     comments_text = []
     if comment_tag:
-        for number in range(0, number_comments):
-            comment = comment_tag[number].text
+        for number_comment in number_comments:
+            comment = comment_tag[number_comment].text
             text = comment.split(')')[-1]
             comments_text.append(text)
     return comments_text
