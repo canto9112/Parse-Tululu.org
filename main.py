@@ -64,8 +64,8 @@ def download_book_cover(url, folder='img'):
 def save_book(filename, response, folder='books'):
     Path(folder).mkdir(parents=True, exist_ok=True)
     path = os.path.join(folder, sanitize_filename(filename))
-    with open(f'{path}.txt', 'wb') as file:
-        file.write(response.content)
+    with open(f'{path}.txt', 'w') as file:
+        file.write(response.text)
 
 
 def downoload_comment(soup):
