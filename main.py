@@ -1,14 +1,14 @@
 import argparse
+import logging
 import os
 from pathlib import Path
-from urllib.parse import urljoin, urlsplit, unquote
+from urllib.parse import unquote, urljoin, urlsplit
 
 import requests
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from tqdm import trange
-import logging
 
 
 def fetch_url_response(url, id):
