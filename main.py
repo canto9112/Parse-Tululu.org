@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from tqdm import trange
+import logging
 
 
 def fetch_url_response(url, id):
@@ -116,11 +117,19 @@ def get_arguments():
     return args.start_page, args.end_page
 
 
+def get_logging():
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                        level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    return logger
+
+
 def main():
     start_id, end_id = get_arguments()
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
     index_url = 'https://tululu.org/'
+    logger = get_logging()
 
     for id in trange(start_id, end_id + 1):
         txt_url = 'https://tululu.org/txt.php'
@@ -139,7 +148,7 @@ def main():
             download_book_cover(image_link)
             save_book(filename, url_response, folder='books')
         except requests.HTTPError:
-            pass
+            logger.error(f'книги id-{id} нет на сайте!')
 
 
 if __name__ == "__main__":
