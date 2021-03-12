@@ -10,8 +10,11 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from tqdm import trange
 
 
-def fetch_url_response(url):
-    response = requests.get(url, verify=False)
+def fetch_url_response(url, id):
+    params = {
+        'id': id
+    }
+    response = requests.get(url, params=params, verify=False)
     response.raise_for_status()
     return response
 
@@ -124,10 +127,10 @@ def main():
     index_url = 'https://tululu.org/'
 
     for id in trange(start_id, end_id + 1):
-        txt_url = f'https://tululu.org/txt.php?id={id}'
+        txt_url = 'https://tululu.org/txt.php'
         book_url = f'https://tululu.org/b{id}/'
 
-        url_response = fetch_url_response(txt_url)
+        url_response = fetch_url_response(txt_url, id)
 
         try:
             check_for_redirect(url_response)
