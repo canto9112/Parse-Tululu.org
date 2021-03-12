@@ -28,8 +28,6 @@ def get_soup(url):
 def check_for_redirect(response):
     if response.history:
         raise requests.HTTPError
-    else:
-        pass
 
 
 def fetch_title_and_author(soup):
@@ -78,8 +76,6 @@ def downoload_comment(soup):
             comment = comment_tag[number].text
             text = comment.split(')')[-1]
             comments_text.append(text)
-    else:
-        pass
     return comments_text
 
 
@@ -134,10 +130,10 @@ def main():
 
         try:
             check_for_redirect(url_response)
-            parse_book_page(book_url, index_url)
-            title = parse_book_page(book_url, index_url)['title']
-            image_link = parse_book_page(book_url, index_url)['image_link']
-            author = parse_book_page(book_url, index_url)['author']
+            book_page = parse_book_page(book_url, index_url)
+            title = book_page['title']
+            image_link = book_page['image_link']
+            author = book_page['author']
             filename = f'{id}. {title}'
 
             download_book_cover(image_link)
