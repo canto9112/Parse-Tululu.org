@@ -9,6 +9,9 @@ from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from tqdm import trange
+import parse_tululu_category
+import json
+from pprint import pprint
 
 
 def fetch_url_response(url, id):
@@ -59,13 +62,15 @@ def download_book_cover(url, folder='img'):
     response.raise_for_status()
     with open(path, 'wb') as file:
         file.write(response.content)
+    return path
 
 
 def save_book(filename, response, folder='books'):
     Path(folder).mkdir(parents=True, exist_ok=True)
     path = os.path.join(folder, sanitize_filename(filename))
-    with open(f'{path}.txt', 'w') as file:
+    with open(path, 'w') as file:
         file.write(response.text)
+    return path
 
 
 def downoload_comment(soup):
@@ -129,7 +134,12 @@ def main():
     index_url = 'https://tululu.org/'
     logger = get_logging()
 
-    for id in trange(start_id, end_id + 1):
+    all_fantastic_urls = parse_tululu_category.fetch_all_page_urls()
+
+    fantastic_books = []
+    for url in all_fantastic_urls:
+        id = url.split('b')[1].replace('/', '')
+
         txt_url = 'https://tululu.org/txt.php'
         book_url = f'https://tululu.org/b{id}/'
 
@@ -138,15 +148,30 @@ def main():
         try:
             check_for_redirect(url_response)
             book_page = parse_book_page(book_url, index_url)
-            title = book_page['title']
             image_link = book_page['image_link']
+            img_src = download_book_cover(image_link)
+            title = book_page['title']
+            filename = f'{title}.txt'
+            book_path = save_book(filename, url_response, folder='books')
             author = book_page['author']
-            filename = f'{id}. {title}'
-
-            download_book_cover(image_link)
-            save_book(filename, url_response, folder='books')
+            soup = get_soup(book_url)
+            comments = downoload_comment(soup)
+            genres = get_genres(soup)
+            fantastic_books.append({'title': title,
+                                    'author': author,
+                                    'img_src': img_src,
+                                    'book_path': book_path,
+                                    'comments': comments,
+                                    'genres': genres})
         except requests.HTTPError:
             logger.error(f'книги id-{id} нет на сайте!')
+
+    with open('fantastic_books.json', 'w') as file:
+        json.dump(fantastic_books, file,
+                                      sort_keys=False,
+                                      indent=4,
+                                      ensure_ascii=False,
+                                      separators=(',', ': '))
 
 
 if __name__ == "__main__":
