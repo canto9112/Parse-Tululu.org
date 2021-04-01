@@ -36,6 +36,7 @@ def check_for_redirect(response):
 
 def fetch_title_and_author(soup):
     tag = soup.find('h1').text
+
     if len(tag.split('::')) == 2:
         title = tag.split('::')[0].strip()
         author = tag.split('::')[1].strip()
@@ -46,7 +47,8 @@ def fetch_title_and_author(soup):
 
 
 def fetch_book_image_url(url, soup):
-    image_url_tag = soup.find('div', class_='bookimage').find('img')['src']
+    selector_image_url = '.bookimage img'
+    image_url_tag = soup.select_one(selector_image_url).get('src')
     image_url = urljoin(url, image_url_tag)
     return image_url
 
