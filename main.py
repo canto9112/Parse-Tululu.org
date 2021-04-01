@@ -87,9 +87,13 @@ def downoload_comment(soup):
 
 
 def get_genres(soup):
-    genres_tag = soup.find_all('span', class_='d_book')
-    text = genres_tag[0].text.split(':')[-1].strip()
-    genres = text.split(',')
+    selector_genres = '.d_book'
+    new_genres_tag = soup.select(selector_genres)
+    genres = []
+    for tag in new_genres_tag:
+        if tag.get_text().startswith('Жанр книги:'):
+            genr = tag.get_text().replace('Жанр книги:', '')
+            genres.append(genr.lstrip())
     return genres
 
 
