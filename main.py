@@ -76,12 +76,13 @@ def save_book(filename, response, folder='books'):
 
 
 def downoload_comment(soup):
-    comment_tag = soup.find_all('div', class_='texts')
+    selector_comment = '.texts .black'
+    new_comment_texts = soup.select(selector_comment)
+
     comments_text = []
 
-    for comm in comment_tag:
-        text = comm.find('span', class_='black').text
-        comments_text.append(text)
+    for comment in new_comment_texts:
+        comments_text.append(comment.get_text())
     return comments_text
 
 
