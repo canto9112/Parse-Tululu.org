@@ -29,9 +29,9 @@ def get_book_urls(url):
     return urls
 
 
-def fetch_all_page_urls():
+def fetch_all_page_urls(start_page, end_page):
     all_urls = []
-    for page in range(1, 2):
+    for page in range(start_page, end_page):
         url = f'https://tululu.org/l55/{page}/'
         all_urls.extend(get_book_urls(url))
     return all_urls

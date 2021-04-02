@@ -141,7 +141,7 @@ def main():
     index_url = 'https://tululu.org/'
     logger = get_logging()
 
-    all_fantastic_urls = parse_tululu_category.fetch_all_page_urls()
+    all_fantastic_urls = parse_tululu_category.fetch_all_page_urls(start_id, end_id)
 
     fantastic_books = []
     for url in all_fantastic_urls:
@@ -173,7 +173,7 @@ def main():
         except requests.HTTPError:
             logger.error(f'книги id-{id} нет на сайте!')
 
-    with open('fantastic_books.json', 'w') as file:
+    with open('2new_fantastic_books.json', 'w') as file:
         json.dump(fantastic_books, file,
                                       sort_keys=False,
                                       indent=4,
