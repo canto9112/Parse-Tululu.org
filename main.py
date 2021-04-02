@@ -4,7 +4,7 @@ import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import config
-import get_books
+import parese_book
 import parse_tululu_category
 
 
@@ -52,16 +52,16 @@ def main():
 
         try:
             check_for_redirect(url_response)
-            book_page = get_books.parse_book_page(book_url, index_url)
+            book_page = parese_book.parse_book_page(book_url, index_url)
             image_link = book_page['image_link']
-            img_src = get_books.download_book_cover(image_link)
+            img_src = parese_book.download_book_cover(image_link)
             title = book_page['title']
             filename = f'{title}.txt'
-            book_path = get_books.save_book(filename, url_response, folder='books')
+            book_path = parese_book.save_book(filename, url_response, folder='books')
             author = book_page['author']
-            soup = get_books.get_soup(book_url)
-            comments = get_books.download_comment(soup)
-            genres = get_books.get_genres(soup)
+            soup = parese_book.get_soup(book_url)
+            comments = parese_book.download_comment(soup)
+            genres = parese_book.get_genres(soup)
             books_json.append({'title': title,
                                     'author': author,
                                     'img_src': img_src,
