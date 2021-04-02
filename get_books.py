@@ -3,6 +3,13 @@ import os
 import requests
 from pathlib import Path
 from pathvalidate import sanitize_filename
+from bs4 import BeautifulSoup
+
+
+def get_soup(url):
+    response = requests.get(url, verify=False)
+    response.raise_for_status()
+    return BeautifulSoup(response.text, 'lxml')
 
 
 def fetch_title_and_author(soup):
@@ -38,7 +45,7 @@ def download_book_cover(url, folder='img'):
     return path
 
 
-def downoload_comment(soup):
+def download_comment(soup):
     selector_comment = '.texts .black'
     new_comment_texts = soup.select(selector_comment)
 
@@ -66,3 +73,18 @@ def save_book(filename, response, folder='books'):
     with open(path, 'w') as file:
         file.write(response.text)
     return path
+
+
+def parse_book_page(book_url, index_url):
+    book_page = {}
+    soup = get_soup(book_url)
+    title, author = fetch_title_and_author(soup)
+    image_url = fetch_book_image_url(index_url, soup)
+    genres = get_genres(soup)
+    comments_text = download_comment(soup)
+    book_page.update({'title': title,
+                      'author': author,
+                      'image_link': image_url,
+                      'genres': genres,
+                      'commets': comments_text})
+    return book_page
