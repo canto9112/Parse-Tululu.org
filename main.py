@@ -113,20 +113,13 @@ def parse_book_page(book_url, index_url):
     return book_page
 
 
-def get_logging():
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                        level=logging.INFO)
-    logger = logging.getLogger(__name__)
-    return logger
-
-
 def main():
     start_id, end_id, dest_folder = config.get_arguments()
     print(dest_folder)
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
     index_url = 'https://tululu.org/'
-    logger = get_logging()
+    logger = config.get_logging()
 
     all_fantastic_urls = parse_tululu_category.fetch_all_page_urls(start_id, end_id)
 
