@@ -17,13 +17,15 @@ def get_book_urls(url):
 
     soup = BeautifulSoup(response.text, 'lxml')
     selector_url = '.d_book a'
-    url_book_tags = soup.select(selector_url)
+    new_all_book_tag = soup.select(selector_url)
+
     urls = []
-    for tag_url in url_book_tags:
-        if tag_url.get('href').endswith('/'):
-            book_url_tag = tag_url.get('href')
-            book_url = urljoin(url, book_url_tag)
-            urls.append(book_url)
+    for urlic in new_all_book_tag:
+        if urlic.get('href').endswith('/'):
+            tag = urlic.get('href')
+            if tag.startswith('/b'):
+                book_url = urljoin(url, tag)
+                urls.append(book_url)
     return urls
 
 
