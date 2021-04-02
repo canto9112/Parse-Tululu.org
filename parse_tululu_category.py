@@ -1,14 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import unquote, urljoin, urlsplit
-from pprint import pprint
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from pathlib import Path
-import os
-from pathvalidate import sanitize_filename
-
-
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+from urllib.parse import urljoin
 
 
 def get_book_urls(url):
