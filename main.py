@@ -12,6 +12,7 @@ from tqdm import trange
 import parse_tululu_category
 import json
 from pprint import pprint
+import config
 
 
 def fetch_url_response(url, id):
@@ -112,21 +113,6 @@ def parse_book_page(book_url, index_url):
     return book_page
 
 
-def get_arguments():
-    parser = argparse.ArgumentParser(
-                        description='Скрипт скачивает книги с сайта tululu.org')
-    parser.add_argument('--start_page',
-                        help='С какой книги начать скачивание',
-                        type=int,
-                        default=1)
-    parser.add_argument('--end_page',
-                        help='Закончить скачивание на этой книге',
-                        type=int,
-                        default=10)
-    args = parser.parse_args()
-    return args.start_page, args.end_page
-
-
 def get_logging():
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
@@ -135,7 +121,8 @@ def get_logging():
 
 
 def main():
-    start_id, end_id = get_arguments()
+    start_id, end_id, dest_folder = config.get_arguments()
+    print(dest_folder)
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
     index_url = 'https://tululu.org/'
