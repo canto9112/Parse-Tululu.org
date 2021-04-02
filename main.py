@@ -44,12 +44,10 @@ def main():
     catefory_urls = parse_tululu_category.fetch_all_page_urls(start_id, end_id)
 
     books_json = []
-
     for url in catefory_urls:
+
         id = url.split('b')[1].replace('/', '')
-
         book_url = f'https://tululu.org/b{id}/'
-
         url_response = fetch_url_response(txt_url, id)
 
         try:
