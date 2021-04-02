@@ -1,19 +1,12 @@
-import argparse
-import logging
-import os
-from pathlib import Path
-from urllib.parse import unquote, urljoin, urlsplit
+import json
 
 import requests
 from bs4 import BeautifulSoup
-from pathvalidate import sanitize_filename
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from tqdm import trange
-import parse_tululu_category
-import json
-from pprint import pprint
+
 import config
 import get_books
+import parse_tululu_category
 
 
 def fetch_url_response(url, id):
@@ -34,14 +27,6 @@ def get_soup(url):
 def check_for_redirect(response):
     if response.history:
         raise requests.HTTPError
-
-
-def save_book(filename, response, folder='books'):
-    Path(folder).mkdir(parents=True, exist_ok=True)
-    path = os.path.join(folder, sanitize_filename(filename))
-    with open(path, 'w') as file:
-        file.write(response.text)
-    return path
 
 
 def parse_book_page(book_url, index_url):
@@ -84,7 +69,7 @@ def main():
             img_src = get_books.download_book_cover(image_link)
             title = book_page['title']
             filename = f'{title}.txt'
-            book_path = save_book(filename, url_response, folder='books')
+            book_path = get_books.save_book(filename, url_response, folder='books')
             author = book_page['author']
             soup = get_soup(book_url)
             comments = get_books.downoload_comment(soup)

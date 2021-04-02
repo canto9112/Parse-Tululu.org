@@ -58,3 +58,11 @@ def get_genres(soup):
             genr = tag.get_text().replace('Жанр книги:', '')
             genres.append(genr.lstrip())
     return genres
+
+
+def save_book(filename, response, folder='books'):
+    Path(folder).mkdir(parents=True, exist_ok=True)
+    path = os.path.join(folder, sanitize_filename(filename))
+    with open(path, 'w') as file:
+        file.write(response.text)
+    return path
