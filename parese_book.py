@@ -32,13 +32,13 @@ def fetch_book_image_url(url, soup):
     return image_url
 
 
-def download_book_cover(url, folder='img'):
-    Path(folder).mkdir(parents=True, exist_ok=True)
+def download_book_cover(url, path_folder, default_folder='img'):
+    Path(f'{path_folder}/{default_folder}').mkdir(parents=True, exist_ok=True)
 
     cover_path = urlsplit(url).path
     _, imagename = os.path.split(cover_path)
 
-    path = os.path.join(folder, sanitize_filename(unquote(imagename)))
+    path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(unquote(imagename)))
     response = requests.get(url, verify=False)
     response.raise_for_status()
     with open(path, 'wb') as file:

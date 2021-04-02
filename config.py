@@ -24,5 +24,9 @@ def get_arguments():
                         help='Путь к каталогу с результатами парсинга: картинкам, книгам, JSON,',
                         type=str,
                         default='result')
+    parser.add_argument('--json_path',
+                        help='Путь к *.json файлу с результатами',
+                        type=str,
+                        default='result')
     args = parser.parse_args()
-    return args.start_page, args.end_page, args.dest_folder
+    return args.start_page, args.end_page, args.dest_folder, args.json_path
