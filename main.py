@@ -1,7 +1,6 @@
 import json
 
 import requests
-from bs4 import BeautifulSoup
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import config
@@ -18,63 +17,54 @@ def fetch_url_response(url, id):
     return response
 
 
-def get_soup(url):
-    response = requests.get(url, verify=False)
-    response.raise_for_status()
-    return BeautifulSoup(response.text, 'lxml')
-
-
 def check_for_redirect(response):
     if response.history:
         raise requests.HTTPError
 
 
-def parse_book_page(book_url, index_url):
-    book_page = {}
-    soup = get_soup(book_url)
-    title, author = get_books.fetch_title_and_author(soup)
-    image_url = get_books.fetch_book_image_url(index_url, soup)
-    genres = get_books.get_genres(soup)
-    comments_text = get_books.downoload_comment(soup)
-    book_page.update({'title': title,
-                      'author': author,
-                      'image_link': image_url,
-                      'genres': genres,
-                      'commets': comments_text})
-    return book_page
+def save_json(books, filename):
+    with open(f'{filename}.json', 'w') as file:
+        json.dump(books, file,
+                  sort_keys=False,
+                  indent=4,
+                  ensure_ascii=False,
+                  separators=(',', ': '))
 
 
 def main():
-    start_id, end_id, dest_folder = config.get_arguments()
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-
-    index_url = 'https://tululu.org/'
     logger = config.get_logging()
 
-    all_fantastic_urls = parse_tululu_category.fetch_all_page_urls(start_id, end_id)
+    start_id, end_id, dest_folder = config.get_arguments()
 
-    fantastic_books = []
-    for url in all_fantastic_urls:
+    index_url = 'https://tululu.org/'
+    txt_url = 'https://tululu.org/txt.php'
+    json_filename = 'JSON'
+
+    catefory_urls = parse_tululu_category.fetch_all_page_urls(start_id, end_id)
+
+    books_json = []
+
+    for url in catefory_urls:
         id = url.split('b')[1].replace('/', '')
 
-        txt_url = 'https://tululu.org/txt.php'
         book_url = f'https://tululu.org/b{id}/'
 
         url_response = fetch_url_response(txt_url, id)
 
         try:
             check_for_redirect(url_response)
-            book_page = parse_book_page(book_url, index_url)
+            book_page = get_books.parse_book_page(book_url, index_url)
             image_link = book_page['image_link']
             img_src = get_books.download_book_cover(image_link)
             title = book_page['title']
             filename = f'{title}.txt'
             book_path = get_books.save_book(filename, url_response, folder='books')
             author = book_page['author']
-            soup = get_soup(book_url)
-            comments = get_books.downoload_comment(soup)
+            soup = get_books.get_soup(book_url)
+            comments = get_books.download_comment(soup)
             genres = get_books.get_genres(soup)
-            fantastic_books.append({'title': title,
+            books_json.append({'title': title,
                                     'author': author,
                                     'img_src': img_src,
                                     'book_path': book_path,
@@ -83,12 +73,7 @@ def main():
         except requests.HTTPError:
             logger.error(f'книги id-{id} нет на сайте!')
 
-    with open('2new_fantastic_books.json', 'w') as file:
-        json.dump(fantastic_books, file,
-                                      sort_keys=False,
-                                      indent=4,
-                                      ensure_ascii=False,
-                                      separators=(',', ': '))
+    save_json(books_json, json_filename)
 
 
 if __name__ == "__main__":
