@@ -31,5 +31,8 @@ def get_arguments():
     parser.add_argument('--skip_imgs',
                         help='Не скачивать картинки',
                         action='store_false')
+    parser.add_argument('--skip_txt',
+                        help='Не скачивать книги',
+                        action='store_false')
     args = parser.parse_args()
-    return args.start_page, args.end_page, args.dest_folder, args.json_path, args.skip_imgs
+    return args.start_page, args.end_page, args.dest_folder, args.json_path, args.skip_imgs, args.skip_txt

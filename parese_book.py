@@ -71,12 +71,15 @@ def get_genres(soup):
     return genres
 
 
-def save_book(filename, response, path_folder, default_folder='books'):
-    Path(f'{path_folder}/{default_folder}').mkdir(parents=True, exist_ok=True)
-    path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(filename))
-    with open(path, 'w') as file:
-        file.write(response.text)
-    return path
+def save_book(filename, response, path_folder, skip_txt, default_folder='books'):
+    if skip_txt:
+        Path(f'{path_folder}/{default_folder}').mkdir(parents=True, exist_ok=True)
+        path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(filename))
+        with open(path, 'w') as file:
+            file.write(response.text)
+        return path
+    else:
+        return 'Текстов нет'
 
 
 def parse_book_page(book_url, index_url):

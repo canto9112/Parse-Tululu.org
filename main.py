@@ -36,14 +36,13 @@ def main():
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     logger = config.get_logging()
 
-    start_id, end_id, dest_folder, json_path, skip_imgs = config.get_arguments()
+    start_id, end_id, dest_folder, json_path, skip_imgs, skip_txt = config.get_arguments()
     Path(json_path).mkdir(parents=True, exist_ok=True)
     index_url = 'https://tululu.org/'
     txt_url = 'https://tululu.org/txt.php'
     json_filename = 'JSON'
 
     category_urls = parse_tululu_category.fetch_all_page_urls(start_id, end_id)
-    print(skip_imgs)
     books_json = []
     for url in category_urls:
 
@@ -58,7 +57,7 @@ def main():
             img_src = parese_book.download_book_cover(image_link, dest_folder, skip_imgs)
             title = book_page['title']
             filename = f'{title}.txt'
-            book_path = parese_book.save_book(filename, url_response, dest_folder)
+            book_path = parese_book.save_book(filename, url_response, dest_folder, skip_txt)
             author = book_page['author']
             soup = parese_book.get_soup(book_url)
             comments = parese_book.download_comment(soup)
