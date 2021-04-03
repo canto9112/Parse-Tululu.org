@@ -19,9 +19,9 @@ def get_arguments():
     parser.add_argument('--end_page',
                         help='Закончить скачивание на этой странице',
                         type=int,
-                        default=10)
+                        default=2)
     parser.add_argument('--dest_folder',
-                        help='Путь к каталогу с результатами парсинга: картинкам, книгам, JSON,',
+                        help='Путь к каталогу с результатами парсинга: картинкам, книгам, JSON',
                         type=str,
                         default='result')
     parser.add_argument('--json_path',
