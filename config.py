@@ -13,11 +13,11 @@ def get_arguments():
     parser = argparse.ArgumentParser(
                         description='Скрипт скачивает книги с сайта tululu.org')
     parser.add_argument('--start_page',
-                        help='С какой книги начать скачивание',
+                        help='С какой страницы начать скачивание',
                         type=int,
                         default=1)
     parser.add_argument('--end_page',
-                        help='Закончить скачивание на этой книге',
+                        help='Закончить скачивание на этой странице',
                         type=int,
                         default=10)
     parser.add_argument('--dest_folder',
