@@ -36,16 +36,16 @@ def main():
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     logger = config.get_logging()
 
-    start_id, end_id, dest_folder, json_path = config.get_arguments()
+    start_id, end_id, dest_folder, json_path, skip_imgs = config.get_arguments()
     Path(json_path).mkdir(parents=True, exist_ok=True)
     index_url = 'https://tululu.org/'
     txt_url = 'https://tululu.org/txt.php'
     json_filename = 'JSON'
 
-    catefory_urls = parse_tululu_category.fetch_all_page_urls(start_id, end_id)
-
+    category_urls = parse_tululu_category.fetch_all_page_urls(start_id, end_id)
+    print(skip_imgs)
     books_json = []
-    for url in catefory_urls:
+    for url in category_urls:
 
         id = url.split('b')[1].replace('/', '')
         book_url = f'https://tululu.org/b{id}/'
@@ -55,10 +55,10 @@ def main():
             check_for_redirect(url_response)
             book_page = parese_book.parse_book_page(book_url, index_url)
             image_link = book_page['image_link']
-            img_src = parese_book.download_book_cover(image_link, dest_folder)
+            img_src = parese_book.download_book_cover(image_link, dest_folder, skip_imgs)
             title = book_page['title']
             filename = f'{title}.txt'
-            book_path = parese_book.save_book(filename, url_response, folder='books')
+            book_path = parese_book.save_book(filename, url_response, dest_folder)
             author = book_page['author']
             soup = parese_book.get_soup(book_url)
             comments = parese_book.download_comment(soup)

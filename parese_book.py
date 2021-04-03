@@ -32,18 +32,21 @@ def fetch_book_image_url(url, soup):
     return image_url
 
 
-def download_book_cover(url, path_folder, default_folder='img'):
-    Path(f'{path_folder}/{default_folder}').mkdir(parents=True, exist_ok=True)
+def download_book_cover(url, path_folder, skip_imgs, default_folder='img'):
+    if skip_imgs:
+        Path(f'{path_folder}/{default_folder}').mkdir(parents=True, exist_ok=True)
 
-    cover_path = urlsplit(url).path
-    _, imagename = os.path.split(cover_path)
+        cover_path = urlsplit(url).path
+        _, imagename = os.path.split(cover_path)
 
-    path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(unquote(imagename)))
-    response = requests.get(url, verify=False)
-    response.raise_for_status()
-    with open(path, 'wb') as file:
-        file.write(response.content)
-    return path
+        path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(unquote(imagename)))
+        response = requests.get(url, verify=False)
+        response.raise_for_status()
+        with open(path, 'wb') as file:
+            file.write(response.content)
+        return path
+    else:
+        return 'Картинок нет'
 
 
 def download_comment(soup):
@@ -68,9 +71,9 @@ def get_genres(soup):
     return genres
 
 
-def save_book(filename, response, folder='books'):
-    Path(folder).mkdir(parents=True, exist_ok=True)
-    path = os.path.join(folder, sanitize_filename(filename))
+def save_book(filename, response, path_folder, default_folder='books'):
+    Path(f'{path_folder}/{default_folder}').mkdir(parents=True, exist_ok=True)
+    path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(filename))
     with open(path, 'w') as file:
         file.write(response.text)
     return path
