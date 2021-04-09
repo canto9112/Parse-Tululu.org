@@ -14,15 +14,9 @@ def get_soup(url):
 
 
 def fetch_title_and_author(soup):
-    tag = soup.find('h1').text
-
-    if len(tag.split('::')) == 2:
-        title = tag.split('::')[0].strip()
-        author = tag.split('::')[1].strip()
-    else:
-        title = tag.split('::')[0].strip()
-        author = 'Нет автора'
-    return title, author
+    tag = soup.find('h1').text.split('::')
+    title, author = tag
+    return title, author.lstrip()
 
 
 def fetch_book_image_url(url, soup):
