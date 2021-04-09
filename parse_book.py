@@ -43,7 +43,7 @@ def download_book_cover(url, path_folder, skip_imgs, default_folder='img'):
         return 'Пользователь предпочел не скачивать картинки'
 
 
-def download_comment(soup):
+def get_comments(soup):
     selector_comment = '.texts .black'
     comment_tags = soup.select(selector_comment)
 
@@ -80,7 +80,7 @@ def parse_book_page(book_url, index_url):
     title, author = fetch_title_and_author(soup)
     image_url = fetch_book_image_url(index_url, soup)
     genres = get_genres(soup)
-    comments_text = download_comment(soup)
+    comments_text = get_comments(soup)
     book_page = {'title': title,
                  'author': author,
                  'image_link': image_url,
