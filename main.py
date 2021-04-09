@@ -43,9 +43,10 @@ def main():
     txt_url = 'https://tululu.org/txt.php'
     json_filename = 'JSON'
 
-    category_urls = parse_tululu_category.fetch_all_page_urls(arguments['start_page'], arguments['end_page'])
+    books_urls = parse_tululu_category.fetch_all_page_urls(arguments['start_page'], arguments['end_page'])
+
     books_json = []
-    for url in category_urls:
+    for url in books_urls:
 
         id = url.split('b')[1].replace('/', '')
         book_url = f'https://tululu.org/b{id}/'
