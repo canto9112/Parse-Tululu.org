@@ -18,11 +18,6 @@ def fetch_download_link(url, id):
     return response
 
 
-def check_for_redirect(response):
-    if response.history:
-        raise requests.HTTPError
-
-
 def save_json(books, filename, path):
     with open(f'{path}/{filename}.json', 'w') as file:
         json.dump(books, file,
@@ -53,7 +48,7 @@ def main():
         download_link = fetch_download_link(txt_url, id)
 
         try:
-            check_for_redirect(download_link)
+            config.check_for_redirect(download_link)
             book_page = parse_book.parse_book_page(book_url, index_url)
             image_link = book_page['image_link']
             img_src = parse_book.download_book_cover(image_link, arguments['dest_folder'], arguments['skip_imgs'])

@@ -1,6 +1,8 @@
 import argparse
 import logging
 
+import requests
+
 
 def get_logging():
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -41,3 +43,8 @@ def get_arguments():
             'json_path': args.json_path,
             'skip_imgs': args.skip_imgs,
             'skip_txt': args.skip_txt}
+
+
+def check_for_redirect(response):
+    if response.history:
+        raise requests.HTTPError
