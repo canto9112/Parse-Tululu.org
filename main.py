@@ -9,7 +9,7 @@ import parse_book
 import parse_tululu_category
 
 
-def fetch_url_response(url, id):
+def fetch_download_link(url, id):
     params = {
         'id': id
     }
@@ -49,16 +49,16 @@ def main():
 
         id = url.split('b')[1].replace('/', '')
         book_url = f'https://tululu.org/b{id}/'
-        url_response = fetch_url_response(txt_url, id)
+        download_link = fetch_download_link(txt_url, id)
 
         try:
-            check_for_redirect(url_response)
+            check_for_redirect(download_link)
             book_page = parse_book.parse_book_page(book_url, index_url)
             image_link = book_page['image_link']
             img_src = parse_book.download_book_cover(image_link, arguments['dest_folder'], arguments['skip_imgs'])
             title = book_page['title']
             filename = f'{title}.txt'
-            book_path = parse_book.save_book(filename, url_response, arguments['dest_folder'], arguments['skip_txt'])
+            book_path = parse_book.save_book(filename, download_link, arguments['dest_folder'], arguments['skip_txt'])
             author = book_page['author']
             soup = parse_book.get_soup(book_url)
             comments = parse_book.download_comment(soup)
