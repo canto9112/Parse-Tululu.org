@@ -55,7 +55,7 @@ def main():
             book_path = parse_book.save_book(filename, download_link, arguments['dest_folder'], arguments['skip_txt'])
             author = book_page['author']
             soup = parse_book.get_soup(book_url)
-            comments = parse_book.download_comment(soup)
+            comments = parse_book.get_comments(soup)
             genres = parse_book.get_genres(soup)
             books_json.append({'title': title,
                                'author': author,
