@@ -27,7 +27,7 @@ def fetch_book_image_url(url, soup):
 
 
 def download_book_cover(url, path_folder, skip_imgs, default_folder='img'):
-    if skip_imgs:
+    if not skip_imgs:
         Path(f'{path_folder}/{default_folder}').mkdir(parents=True, exist_ok=True)
 
         cover_path = urlsplit(url).path
@@ -65,7 +65,7 @@ def get_genres(soup):
 
 
 def save_book(filename, response, path_folder, skip_txt, default_folder='books'):
-    if skip_txt:
+    if not skip_txt:
         Path(f'{path_folder}/{default_folder}').mkdir(parents=True, exist_ok=True)
         path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(filename))
         with open(path, 'w') as file:
