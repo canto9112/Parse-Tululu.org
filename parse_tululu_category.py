@@ -13,11 +13,11 @@ def get_book_urls(url):
     new_all_book_tag = soup.select(selector_url)
 
     urls = []
-    for urlic in new_all_book_tag:
-        if urlic.get('href').endswith('/'):
-            tag = urlic.get('href')
-            if tag.startswith('/b'):
-                book_url = urljoin(url, tag)
+    for tag_url in new_all_book_tag:
+        if tag_url.get('href').endswith('/'):
+            id_book = tag_url.get('href')
+            if id_book.startswith('/b'):
+                book_url = urljoin(url, id_book)
                 urls.append(book_url)
     return urls
 
