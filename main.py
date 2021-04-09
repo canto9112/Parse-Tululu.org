@@ -36,13 +36,13 @@ def main():
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     logger = config.get_logging()
 
-    start_id, end_id, dest_folder, json_path, skip_imgs, skip_txt = config.get_arguments()
+    start_page, end_page, dest_folder, json_path, skip_imgs, skip_txt = config.get_arguments()
     Path(json_path).mkdir(parents=True, exist_ok=True)
     index_url = 'https://tululu.org/'
     txt_url = 'https://tululu.org/txt.php'
     json_filename = 'JSON'
 
-    category_urls = parse_tululu_category.fetch_all_page_urls(start_id, end_id)
+    category_urls = parse_tululu_category.fetch_all_page_urls(start_page, end_page)
     books_json = []
     for url in category_urls:
 
