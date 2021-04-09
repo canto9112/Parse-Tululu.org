@@ -43,9 +43,9 @@ def main():
     books_json = []
     for url in books_urls:
 
-        id = url.split('b')[1].replace('/', '')
-        book_url = f'https://tululu.org/b{id}/'
-        download_link = fetch_download_link(txt_url, id)
+        book_id = url.split('b')[1].replace('/', '')
+        book_url = f'https://tululu.org/b{book_id}/'
+        download_link = fetch_download_link(txt_url, book_id)
 
         try:
             config.check_for_redirect(download_link)
@@ -66,7 +66,7 @@ def main():
                                'comments': comments,
                                'genres': genres})
         except requests.HTTPError:
-            logger.error(f'книги id-{id} нет на сайте!')
+            logger.error(f'книги id-{book_id} нет на сайте!')
 
     save_json(books_json, json_filename, arguments['json_path'])
 
