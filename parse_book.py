@@ -61,9 +61,9 @@ def download_comment(soup):
 
 def get_genres(soup):
     selector_genres = '.d_book'
-    new_genres_tag = soup.select(selector_genres)
+    genres_tags = soup.select(selector_genres)
     genres = []
-    for tag in new_genres_tag:
+    for tag in genres_tags:
         if tag.get_text().startswith('Жанр книги:'):
             genr = tag.get_text().replace('Жанр книги:', '')
             genres.append(genr.lstrip())
