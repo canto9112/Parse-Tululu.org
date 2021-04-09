@@ -10,10 +10,10 @@ def get_book_urls(url):
 
     soup = BeautifulSoup(response.text, 'lxml')
     selector_url = '.d_book a'
-    new_all_book_tag = soup.select(selector_url)
+    book_tags = soup.select(selector_url)
 
     urls = []
-    for tag_url in new_all_book_tag:
+    for tag_url in book_tags:
         if tag_url.get('href').endswith('/'):
             id_book = tag_url.get('href')
             if id_book.startswith('/b'):
