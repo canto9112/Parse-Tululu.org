@@ -40,7 +40,7 @@ def download_book_cover(url, path_folder, skip_imgs, default_folder='img'):
             file.write(response.content)
         return path
     else:
-        return 'Картинок нет'
+        return 'Пользователь предпочел не скачивать картинки'
 
 
 def download_comment(soup):
@@ -72,7 +72,7 @@ def save_book(filename, response, path_folder, skip_txt, default_folder='books')
             file.write(response.text)
         return path
     else:
-        return 'Текстов нет'
+        return 'Пользователь предпочел не скачивать тексты'
 
 
 def parse_book_page(book_url, index_url):
