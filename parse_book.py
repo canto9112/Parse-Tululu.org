@@ -51,13 +51,12 @@ def download_book_cover(url, path_folder, skip_imgs, default_folder='img'):
 
 def download_comment(soup):
     selector_comment = '.texts .black'
-    new_comment_texts = soup.select(selector_comment)
+    comment_tags = soup.select(selector_comment)
 
-    comments_text = []
-
-    for comment in new_comment_texts:
-        comments_text.append(comment.get_text())
-    return comments_text
+    comments = []
+    for comment_tag in comment_tags:
+        comments.append(comment_tag.get_text())
+    return comments
 
 
 def get_genres(soup):
