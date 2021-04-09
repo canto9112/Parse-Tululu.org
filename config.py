@@ -35,4 +35,9 @@ def get_arguments():
                         help='Не скачивать книги',
                         action='store_false')
     args = parser.parse_args()
-    return args.start_page, args.end_page, args.dest_folder, args.json_path, args.skip_imgs, args.skip_txt
+    return {'start_page': args.start_page,
+            'end_page': args.end_page,
+            'dest_folder': args.dest_folder,
+            'json_path': args.json_path,
+            'skip_imgs': args.skip_imgs,
+            'skip_txt': args.skip_txt}

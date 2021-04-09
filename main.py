@@ -36,13 +36,14 @@ def main():
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     logger = config.get_logging()
 
-    start_page, end_page, dest_folder, json_path, skip_imgs, skip_txt = config.get_arguments()
-    Path(json_path).mkdir(parents=True, exist_ok=True)
+    arguments = config.get_arguments()
+
+    Path(arguments['json_path']).mkdir(parents=True, exist_ok=True)
     index_url = 'https://tululu.org/'
     txt_url = 'https://tululu.org/txt.php'
     json_filename = 'JSON'
 
-    category_urls = parse_tululu_category.fetch_all_page_urls(start_page, end_page)
+    category_urls = parse_tululu_category.fetch_all_page_urls(arguments['start_page'], arguments['end_page'])
     books_json = []
     for url in category_urls:
 
@@ -54,10 +55,10 @@ def main():
             check_for_redirect(url_response)
             book_page = parse_book.parse_book_page(book_url, index_url)
             image_link = book_page['image_link']
-            img_src = parse_book.download_book_cover(image_link, dest_folder, skip_imgs)
+            img_src = parse_book.download_book_cover(image_link, arguments['dest_folder'], arguments['skip_imgs'])
             title = book_page['title']
             filename = f'{title}.txt'
-            book_path = parse_book.save_book(filename, url_response, dest_folder, skip_txt)
+            book_path = parse_book.save_book(filename, url_response, arguments['dest_folder'], arguments['skip_txt'])
             author = book_page['author']
             soup = parse_book.get_soup(book_url)
             comments = parse_book.download_comment(soup)
@@ -71,7 +72,7 @@ def main():
         except requests.HTTPError:
             logger.error(f'книги id-{id} нет на сайте!')
 
-    save_json(books_json, json_filename, json_path)
+    save_json(books_json, json_filename, arguments['json_path'])
 
 
 if __name__ == "__main__":
