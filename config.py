@@ -2,6 +2,7 @@ import argparse
 import logging
 
 import requests
+from parse_tululu_category import get_last_page_number
 
 
 def get_logging():
@@ -12,8 +13,8 @@ def get_logging():
 
 
 def get_arguments():
-    parser = argparse.ArgumentParser(
-                        description='Скрипт скачивает книги с сайта tululu.org')
+    parser = argparse.ArgumentParser(description='Скрипт скачивает книги с сайта tululu.org')
+    last_page_number = get_last_page_number()
     parser.add_argument('--start_page',
                         help='С какой страницы начать скачивание',
                         type=int,
@@ -21,7 +22,7 @@ def get_arguments():
     parser.add_argument('--end_page',
                         help='Закончить скачивание на этой странице',
                         type=int,
-                        default=2)
+                        default=last_page_number)
     parser.add_argument('--dest_folder',
                         help='Путь к каталогу с результатами парсинга: картинкам, книгам, JSON',
                         type=str,
