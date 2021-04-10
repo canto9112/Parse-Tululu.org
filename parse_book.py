@@ -26,8 +26,35 @@ def fetch_book_image_url(url, soup):
     return image_url
 
 
-def download_book_cover(url, path_folder, skip_imgs, default_folder='img'):
-    if not skip_imgs:
+def get_comments(soup):
+    selector_comment = '.texts .black'
+    comment_tags = soup.select(selector_comment)
+
+    comments = []
+    for comment_tag in comment_tags:
+        comments.append(comment_tag.get_text())
+    return comments
+
+
+def get_genres(soup):
+    selector_genres = 'span.d_book'
+    genres_tags = soup.select_one(selector_genres)
+    return genres_tags.text.replace('Жанр книги:', '').lstrip()
+
+
+def save_book(filename, response, path_folder, skip_txt, default_folder='books'):
+    if not skip_txt:
+        Path(f'{path_folder}/{default_folder}').mkdir(parents=True, exist_ok=True)
+        path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(filename))
+        with open(path, 'w') as file:
+            file.write(response.text)
+        return path
+    else:
+        return 'Пользователь предпочел не скачивать тексты'
+
+
+def download_book_cover(url, path_folder, skip_img, default_folder='img'):
+    if not skip_img:
         Path(f'{path_folder}/{default_folder}').mkdir(parents=True, exist_ok=True)
 
         cover_path = urlsplit(url).path
@@ -41,38 +68,6 @@ def download_book_cover(url, path_folder, skip_imgs, default_folder='img'):
         return path
     else:
         return 'Пользователь предпочел не скачивать картинки'
-
-
-def get_comments(soup):
-    selector_comment = '.texts .black'
-    comment_tags = soup.select(selector_comment)
-
-    comments = []
-    for comment_tag in comment_tags:
-        comments.append(comment_tag.get_text())
-    return comments
-
-
-def get_genres(soup):
-    selector_genres = '.d_book'
-    genres_tags = soup.select(selector_genres)
-    genres = []
-    for tag in genres_tags:
-        if tag.get_text().startswith('Жанр книги:'):
-            genr = tag.get_text().replace('Жанр книги:', '')
-            genres.append(genr.lstrip())
-    return genres
-
-
-def save_book(filename, response, path_folder, skip_txt, default_folder='books'):
-    if not skip_txt:
-        Path(f'{path_folder}/{default_folder}').mkdir(parents=True, exist_ok=True)
-        path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(filename))
-        with open(path, 'w') as file:
-            file.write(response.text)
-        return path
-    else:
-        return 'Пользователь предпочел не скачивать тексты'
 
 
 def parse_book_page(book_url, index_url):
