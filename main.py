@@ -49,7 +49,7 @@ def main():
             config.check_for_redirect(download_link)
             book_page = parse_book.parse_book_page(book_url, index_url)
             image_link = book_page['image_link']
-            img_src = parse_book.download_book_cover(image_link, arguments['dest_folder'], arguments['skip_imgs'])
+            img_src = parse_book.download_book_cover(image_link, arguments['dest_folder'], arguments['skip_img'])
             title = book_page['title']
             filename = f'{title}.txt'
             book_path = parse_book.save_book(filename, download_link, arguments['dest_folder'], arguments['skip_txt'])

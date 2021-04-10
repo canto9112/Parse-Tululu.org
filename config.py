@@ -30,18 +30,18 @@ def get_arguments():
                         help='Путь к *.json файлу с результатами',
                         type=str,
                         default='result')
-    parser.add_argument('--skip_imgs',
+    parser.add_argument('--skip_img',
                         help='Не скачивать картинки',
-                        action='store_false')
+                        default=False)
     parser.add_argument('--skip_txt',
                         help='Не скачивать книги',
-                        action='store_false')
+                        default=False)
     args = parser.parse_args()
     return {'start_page': args.start_page,
             'end_page': args.end_page,
             'dest_folder': args.dest_folder,
             'json_path': args.json_path,
-            'skip_imgs': args.skip_imgs,
+            'skip_img': args.skip_img,
             'skip_txt': args.skip_txt}
 
 
