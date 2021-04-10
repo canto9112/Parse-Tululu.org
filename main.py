@@ -42,16 +42,16 @@ def main():
 
     books_json = []
     for url in books_urls:
-        id = url.split('b')[1].replace('/', '')
-        book_url = f'https://tululu.org/b{id}/'
-        download_link = fetch_download_link(txt_url, id)
+        book_id = url.split('b')[1].replace('/', '')
+        book_url = f'https://tululu.org/b{book_id}/'
+        download_link = fetch_download_link(txt_url, book_id)
         try:
             config.check_for_redirect(download_link)
             book_page = parse_book.parse_book_page(book_url, index_url)
             image_link = book_page['image_link']
-            img_src = parse_book.download_book_cover(image_link, arguments['dest_folder'], arguments['skip_img'])
+            img_src = parse_book.download_book_cover(image_link, book_id, arguments['dest_folder'], arguments['skip_img'])
             title = book_page['title']
-            filename = f'{title}.txt'
+            filename = f'{book_id}-{title}.txt'
             book_path = parse_book.save_book(filename, download_link, arguments['dest_folder'], arguments['skip_txt'])
             author = book_page['author']
             soup = parse_book.get_soup(book_url)
@@ -64,7 +64,7 @@ def main():
                                'comments': comments,
                                'genres': genres})
         except requests.HTTPError:
-            logger.error(f'книги id-{id} нет на сайте!')
+            logger.error(f'книги id-{book_id} нет на сайте!')
 
     save_json(books_json, json_filename, arguments['json_path'])
 

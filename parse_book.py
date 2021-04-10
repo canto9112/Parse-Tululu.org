@@ -53,14 +53,18 @@ def save_book(filename, response, path_folder, skip_txt, default_folder='books')
         return 'Пользователь предпочел не скачивать тексты'
 
 
-def download_book_cover(url, path_folder, skip_img, default_folder='img'):
+def download_book_cover(url, book_id, path_folder, skip_img, default_folder='img'):
     if not skip_img:
         Path(f'{path_folder}/{default_folder}').mkdir(parents=True, exist_ok=True)
 
         cover_path = urlsplit(url).path
         _, imagename = os.path.split(cover_path)
+        print(imagename)
+        if imagename != 'nopic.gif':
+            path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(unquote(f'{book_id}-{imagename}')))
+        else:
+            path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(unquote(imagename)))
 
-        path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(unquote(imagename)))
         response = requests.get(url, verify=False)
         response.raise_for_status()
         with open(path, 'wb') as file:
