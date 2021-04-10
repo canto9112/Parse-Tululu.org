@@ -46,6 +46,7 @@ def save_book(filename, response, path_folder, skip_txt, default_folder='books')
     if not skip_txt:
         Path(f'{path_folder}/{default_folder}').mkdir(parents=True, exist_ok=True)
         path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(filename))
+
         with open(path, 'w') as file:
             file.write(response.text)
         return path
@@ -59,12 +60,10 @@ def download_book_cover(url, book_id, path_folder, skip_img, default_folder='img
 
         cover_path = urlsplit(url).path
         _, imagename = os.path.split(cover_path)
-        print(imagename)
         if imagename != 'nopic.gif':
             path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(unquote(f'{book_id}-{imagename}')))
         else:
             path = os.path.join(f'{path_folder}/{default_folder}', sanitize_filename(unquote(imagename)))
-
         response = requests.get(url, verify=False)
         response.raise_for_status()
         with open(path, 'wb') as file:
@@ -80,7 +79,7 @@ def parse_book_page(book_url, index_url):
     image_url = fetch_book_image_url(index_url, soup)
     genres = get_genres(soup)
     comments_text = get_comments(soup)
-    book_page = {'title': title,
+    book_page = {'title': title.rstrip(),
                  'author': author,
                  'image_link': image_url,
                  'genres': genres,
