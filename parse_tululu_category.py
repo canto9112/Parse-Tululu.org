@@ -23,11 +23,11 @@ def get_book_urls(url):
 
 
 def fetch_all_page_urls(start_page, end_page):
-    all_urls = []
+    urls = []
     for page in range(start_page, end_page):
         url = f'https://tululu.org/l55/{page}/'
-        all_urls.extend(get_book_urls(url))
-    return all_urls
+        urls.extend(get_book_urls(url))
+    return urls
 
 
 def get_last_page_number():
