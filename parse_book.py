@@ -15,8 +15,7 @@ def get_soup(url):
 
 def fetch_title_and_author(soup):
     selector_title = 'h1'
-    tag = soup.select_one(selector_title).text.split('::')
-    title, author = tag
+    title, author = soup.select_one(selector_title).text.split('::')
     return title, author.lstrip()
 
 
