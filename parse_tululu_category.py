@@ -2,7 +2,6 @@ from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
-from pprint import pprint
 
 
 def get_book_urls(url):
@@ -16,9 +15,9 @@ def get_book_urls(url):
     urls = []
     for tag_url in book_tags:
         if tag_url.get('href').endswith('/'):
-            id_book = tag_url.get('href')
-            if id_book.startswith('/b'):
-                book_url = urljoin(url, id_book)
+            book_id = tag_url.get('href')
+            if book_id.startswith('/b'):
+                book_url = urljoin(url, book_id)
                 urls.append(book_url)
     return set(urls)
 
