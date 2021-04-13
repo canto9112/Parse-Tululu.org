@@ -22,7 +22,7 @@ def get_arguments():
     parser.add_argument('--end_page',
                         help='Закончить скачивание на этой странице',
                         type=int,
-                        default=last_page_number)
+                        default=3)
     parser.add_argument('--dest_folder',
                         help='Путь к каталогу с результатами парсинга: картинкам, книгам, JSON',
                         type=str,
@@ -44,8 +44,3 @@ def get_arguments():
             'json_path': args.json_path,
             'skip_img': args.skip_img,
             'skip_txt': args.skip_txt}
-
-
-def check_for_redirect(response):
-    if response.history:
-        raise requests.HTTPError

@@ -9,6 +9,11 @@ import parse_book
 import parse_tululu_category
 
 
+def check_for_redirect(response):
+    if response.history:
+        raise requests.HTTPError
+
+
 def get_book_response(url, id):
     params = {
         'id': id
@@ -47,7 +52,7 @@ def main():
         book_response = get_book_response(txt_url, book_id)
 
         try:
-            config.check_for_redirect(book_response)
+            check_for_redirect(book_response)
             book_page = parse_book.parse_book_page(book_url, index_url)
             image_link = book_page['image_link']
             img_src = parse_book.download_book_cover(image_link, book_id, arguments['dest_folder'], arguments['skip_img'])
