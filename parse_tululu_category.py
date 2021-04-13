@@ -2,6 +2,7 @@ from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
+from pprint import pprint
 
 
 def get_book_urls(url):
@@ -9,7 +10,7 @@ def get_book_urls(url):
     response.raise_for_status()
 
     soup = BeautifulSoup(response.text, 'lxml')
-    selector_url = '.d_book a'
+    selector_url = '.bookimage a'
     book_tags = soup.select(selector_url)
 
     urls = []
@@ -39,3 +40,6 @@ def get_last_page_number():
     selector_page = '.center .npage'
     page_tags = soup.select(selector_page)
     return page_tags[-1].text
+
+
+
