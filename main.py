@@ -9,7 +9,7 @@ import parse_book
 import parse_tululu_category
 
 
-def fetch_download_link(url, id):
+def get_page_response(url, id):
     params = {
         'id': id
     }
@@ -44,7 +44,9 @@ def main():
     for url in books_urls:
         book_id = url.split('b')[1].replace('/', '')
         book_url = f'https://tululu.org/b{book_id}/'
-        download_link = fetch_download_link(txt_url, book_id)
+        download_link = get_page_response(txt_url, book_id)
+        print(download_link)
+
         try:
             config.check_for_redirect(download_link)
             book_page = parse_book.parse_book_page(book_url, index_url)
