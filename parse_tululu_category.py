@@ -38,8 +38,4 @@ def get_last_page_number():
     soup = BeautifulSoup(response.text, 'lxml')
     selector_page = '.center .npage'
     page_tags = soup.select(selector_page)
-    for tag in page_tags:
-        last_number = tag.text
-    return last_number
-
-
+    return page_tags[-1].text
