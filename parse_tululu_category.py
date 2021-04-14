@@ -34,11 +34,9 @@ def get_last_page_number():
     url = 'https://tululu.org/l55/'
     response = requests.get(url, verify=False)
     response.raise_for_status()
-
     soup = BeautifulSoup(response.text, 'lxml')
-    selector_page = '.center .npage'
-    page_tags = soup.select(selector_page)
-    return page_tags[-1].text
-
+    selector_page = '.npage:last-child'
+    page_tags = soup.select_one(selector_page)
+    return page_tags.text
 
 
