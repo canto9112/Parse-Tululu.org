@@ -4,3 +4,4 @@ beautifulsoup4==4.9.3
 pathvalidate==2.3.2
 tqdm==4.59.0
 lxml==4.6.2
+Jinja2==2.11.3
