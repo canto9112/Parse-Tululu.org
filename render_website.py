@@ -1,8 +1,9 @@
 import json
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+from more_itertools import chunked
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from livereload import Server
+from pprint import pprint
 
 
 def get_template():
@@ -18,7 +19,8 @@ def get_books():
     with open('result/JSON.json', 'r') as my_file:
         file_json = my_file.read()
     books = json.loads(file_json)
-    return books
+
+    return list(chunked(books, 2))
 
 
 def get_rendered_page(template, books):
