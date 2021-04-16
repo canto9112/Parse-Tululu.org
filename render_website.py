@@ -2,6 +2,7 @@ import json
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from livereload import Server
 
 
 def get_template():
@@ -32,14 +33,23 @@ def get_index_html(rendered_page):
         file.write(rendered_page)
 
 
-def main():
+def rebuild():
     template = get_template()
     books = get_books()
     rendered_page = get_rendered_page(template, books)
     get_index_html(rendered_page)
+    print("Site rebuilt")
 
-    server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
-    server.serve_forever()
+
+def main():
+
+    rebuild()
+
+    server = Server()
+
+    server.watch('template.html', rebuild)
+
+    server.serve(root='.')
 
 
 if __name__ == '__main__':
