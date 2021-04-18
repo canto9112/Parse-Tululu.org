@@ -20,24 +20,25 @@ def get_books():
     with open('result/JSON.json', 'r') as my_file:
         file_json = my_file.read()
     books = json.loads(file_json)
-    return list(chunked(books, 10))
+    return list(chunked(books, 20))
 
 
 def get_rendered_page(template, books):
     rendered_pages = []
-    print(books)
     for page_number, page in enumerate(books, 1):
-        print(page_number, page)
+        pages = {}
         rendered_page = template.render(books=page)
-        rendered_pages.append(rendered_page)
+        pages.update({'page_number': page_number,
+                      'rendered_page': rendered_page})
+        rendered_pages.append(pages)
 
     return rendered_pages
 
 
-def get_index_html(rendered_page, page_number):
-
-    with open(f'pages/index{page_number}.html', 'w', encoding="utf8") as file:
-        file.write(rendered_page)
+def get_index_html(rendered_page):
+    print(rendered_page["rendered_page"])
+    with open(f'pages/index{rendered_page["page_number"]}.html', 'w', encoding="utf8") as file:
+        file.write(rendered_page['rendered_page'])
 
 
 def rebuild():
@@ -45,8 +46,8 @@ def rebuild():
     books = get_books()
     rendered_pages = get_rendered_page(template, books)
     os.makedirs('pages')
-    for page_number, rendered_page in enumerate(rendered_pages, 1):
-        get_index_html(rendered_page, page_number)
+    for rendered_page in rendered_pages:
+        get_index_html(rendered_page)
 
     print("Site rebuilt")
 
