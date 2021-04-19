@@ -22,7 +22,7 @@ def get_arguments():
     parser.add_argument('--end_page',
                         help='Закончить скачивание на этой странице',
                         type=int,
-                        default=3)
+                        default=last_page_number)
     parser.add_argument('--dest_folder',
                         help='Путь к каталогу с результатами парсинга: картинкам, книгам, JSON',
                         type=str,
