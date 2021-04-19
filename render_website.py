@@ -29,21 +29,18 @@ def get_rendered_page(template, books):
     for page_number, page in enumerate(books, 1):
         pages = {}
         all_pages = (len(books))
-
         rendered_page = template.render(books=page,
                                         all_pages=all_pages,
                                         current_page=page_number)
         pages.update({'page_number': page_number,
                       'rendered_page': rendered_page})
-
         rendered_pages.append(pages)
 
     return rendered_pages
 
 
 def get_index_html(rendered_page):
-    print(rendered_page["rendered_page"])
-    with open(f'pages/index{rendered_page["page_number"]}.html', 'w', encoding="utf8") as file:
+    with open(f'docs/pages/index{rendered_page["page_number"]}.html', 'w', encoding="utf8") as file:
         file.write(rendered_page['rendered_page'])
 
 
