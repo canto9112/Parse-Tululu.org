@@ -5,6 +5,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from livereload import Server
 from pprint import pprint
 import os
+import math
 
 
 def get_template():
@@ -27,9 +28,14 @@ def get_rendered_page(template, books):
     rendered_pages = []
     for page_number, page in enumerate(books, 1):
         pages = {}
-        rendered_page = template.render(books=page)
+        all_pages = (len(books))
+
+        rendered_page = template.render(books=page,
+                                        all_pages=all_pages,
+                                        current_page=page_number)
         pages.update({'page_number': page_number,
                       'rendered_page': rendered_page})
+
         rendered_pages.append(pages)
 
     return rendered_pages
