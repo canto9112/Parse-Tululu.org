@@ -40,7 +40,7 @@ def get_rendered_page(template, books):
 
 
 def get_index_html(rendered_page):
-    with open(f'docs/pages/index{rendered_page["page_number"]}.html', 'w', encoding="utf8") as file:
+    with open(f'pages/index{rendered_page["page_number"]}.html', 'w', encoding="utf8") as file:
         file.write(rendered_page['rendered_page'])
 
 
