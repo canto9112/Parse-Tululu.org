@@ -21,15 +21,15 @@ def get_arguments():
     parser.add_argument('--end_page',
                         help='Закончить скачивание на этой странице',
                         type=int,
-                        default=last_page_number)
+                        default=5)
     parser.add_argument('--dest_folder',
                         help='Путь к каталогу с результатами парсинга: картинкам, книгам, JSON',
                         type=str,
-                        default='result')
+                        default='media')
     parser.add_argument('--json_path',
                         help='Путь к *.json файлу с результатами',
                         type=str,
-                        default='result')
+                        default='media')
     parser.add_argument('--skip_img',
                         help='Не скачивать картинки',
                         default=False)
