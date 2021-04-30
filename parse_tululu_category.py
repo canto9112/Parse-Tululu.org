@@ -38,5 +38,3 @@ def get_last_page_number():
     selector_page = '.npage:last-child'
     page_tags = soup.select_one(selector_page)
     return page_tags.text
-
-

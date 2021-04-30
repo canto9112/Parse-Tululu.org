@@ -1,11 +1,9 @@
 import json
-from more_itertools import chunked
+import os
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from livereload import Server
-from pprint import pprint
-import os
-import math
+from more_itertools import chunked
 
 
 def get_template():
@@ -64,9 +62,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-

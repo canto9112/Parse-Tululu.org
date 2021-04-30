@@ -1,7 +1,6 @@
 import argparse
 import logging
 
-import requests
 from parse_tululu_category import get_last_page_number
 
 
