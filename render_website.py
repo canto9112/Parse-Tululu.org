@@ -17,8 +17,8 @@ def get_template():
 
 def get_books():
     with open('result/JSON.json', 'r') as my_file:
-        file_json = my_file.read()
-    books = json.loads(file_json)
+        json_file = my_file.read()
+    books = json.loads(json_file)
     return list(chunked(books, 20))
 
 
