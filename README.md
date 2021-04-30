@@ -42,6 +42,7 @@
 Запустите файл render_website.py.
 
 ```>>> python render_website.py```
+
 В папке ```pages``` сформируются страницы сайта ```index1.html, index2.html, index3.html``` и т.д.
 Для просмотра сайта нужно скачать на свой компьютер папки madea, static, pages, перейти в папку pages и открыть один из html файлов.
 ## Цели проекта
