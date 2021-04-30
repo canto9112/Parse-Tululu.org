@@ -59,7 +59,7 @@
                   <p class="card-text"><b>Автор:</b> {{book.author}}</p>
                   <p class="card-text"><b>Жанр:</b> {{book.genres}}</p>
                   <br>
-                  <a href="../{{book.book_path}}" target="_blank" rel="noopener noreferrer">Читать книгу</a>
+                  <a href="../{{book.book_path|urlencode}}" target="_blank" rel="noopener noreferrer">Читать книгу</a>
                 </div>
               </div>
             </div>
