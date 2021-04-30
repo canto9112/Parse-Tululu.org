@@ -37,7 +37,12 @@
 
 Пример 6: ```>>> python main.py --dest_folder My_folder --skip_txt``` Скачает книги без .txt файлов с 1 по последнюю  страницу в папку ```My_folder```.
 
+## Просмотр сайта оффлайн
 
+Запустите файл render_website.py.
+```>>> python render_website.py```
+В папке ```pages``` сформируются страницы сайта ```index1.html, index2.html, index3.html``` и т.д.
+Для просмотра сайта нужно скачать на свой компьютер папки madea, static, pages, перейти в папку pages и открыть один из html файлов.
 ## Цели проекта
 
 Код написан в учебных целях — это урок в курсе по Python и веб-разработке на сайте [Devman](https://dvmn.org).
