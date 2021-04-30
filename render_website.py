@@ -22,7 +22,7 @@ def get_books():
     return list(chunked(books, 20))
 
 
-def get_rendered_page(template, books):
+def get_rendered_pages(template, books):
     rendered_pages = []
     for page_number, page in enumerate(books, 1):
         all_pages = len(books)
@@ -47,7 +47,7 @@ def write_index_html(rendered_page):
 def rebuild():
     template = get_template()
     books = get_books()
-    rendered_pages = get_rendered_page(template, books)
+    rendered_pages = get_rendered_pages(template, books)
     os.makedirs('pages')
     for rendered_page in rendered_pages:
         write_index_html(rendered_page)
