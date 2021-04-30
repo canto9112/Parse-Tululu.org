@@ -37,7 +37,7 @@ def get_rendered_page(template, books):
     return rendered_pages
 
 
-def get_index_html(rendered_page):
+def write_index_html(rendered_page):
     with open(f'pages/index{rendered_page["page_number"]}.html', 'w', encoding="utf8") as file:
         file.write(rendered_page['rendered_page'])
 
@@ -48,7 +48,7 @@ def rebuild():
     rendered_pages = get_rendered_page(template, books)
     os.makedirs('pages')
     for rendered_page in rendered_pages:
-        get_index_html(rendered_page)
+        write_index_html(rendered_page)
 
     print("Site rebuilt")
 
