@@ -25,13 +25,15 @@ def get_books():
 def get_rendered_page(template, books):
     rendered_pages = []
     for page_number, page in enumerate(books, 1):
-        page = {}
         all_pages = (len(books))
         rendered_page = template.render(books=page,
                                         all_pages=all_pages,
                                         current_page=page_number)
-        page.update({'page_number': page_number,
-                      'rendered_page': rendered_page})
+        page = {
+            'page_number': page_number,
+            'rendered_page': rendered_page
+        }
+
         rendered_pages.append(page)
 
     return rendered_pages
