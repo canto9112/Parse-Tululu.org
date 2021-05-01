@@ -10,59 +10,59 @@
   </head>
   <body>
 
-  <div class="container">
-    <div class="mx-auto" style="width: 350px;">
-      <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center p-3">
-          {% if current_page - 1 == 0 %}
-          <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Назад</a>
-          </li>
-          {% else %}
-          <li class="page-item"><a class="page-link" href="../pages/index{{current_page - 1}}.html">Назад</a></li>
-          {% endif %}
-          {% for number in range(1, all_pages + 1) %}
-            {% if current_page == number %}
-              <li class="page-item active" aria-current="page">
-                <a class="page-link" href="../pages/index{{number}}.html">{{number}}<span class="sr-only">(current)</span></a>
-              </li>
+    <div class="container">
+      <div class="mx-auto" style="width: 350px;">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center p-3">
+            {% if current_page - 1 == 0 %}
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Назад</a>
+            </li>
             {% else %}
-              <li class="page-item"><a class="page-link" href="../pages/index{{number}}.html">{{number}}</a></li>
+            <li class="page-item"><a class="page-link" href="../pages/index{{current_page - 1}}.html">Назад</a></li>
             {% endif %}
-          {% endfor %}
-          {% if current_page == all_pages %}
-          <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Вперед</a>
-          </li>
-          {% else %}
-          <li class="page-item"><a class="page-link" href="../pages/index{{current_page + 1}}.html">Вперед</a></li>
-          {% endif %}
-        </ul>
-      </nav>
-    </div>
+            {% for number in range(1, all_pages + 1) %}
+              {% if current_page == number %}
+                <li class="page-item active" aria-current="page">
+                  <a class="page-link" href="../pages/index{{number}}.html">{{number}}<span class="sr-only">(current)</span></a>
+                </li>
+              {% else %}
+                <li class="page-item"><a class="page-link" href="../pages/index{{number}}.html">{{number}}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if current_page == all_pages %}
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Вперед</a>
+            </li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="../pages/index{{current_page + 1}}.html">Вперед</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
 
-    <div class="row">
-      {% for book in books %}
-        <div class="card mb-4 p-3" style="width: 540px;">
-          <div class="row no-gutters">
-            <div class="col-md-4">
-              <img src="../{{book.img_src|urlencode}}" class="card-img" alt="{{book.title}}">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">{{book.title}}</h5>
-                <p class="card-text"><b>Автор:</b> {{book.author}}</p>
-                <span class="card-text"><b>Жанр:</b> {{book.genres}}</span>
-                <br>
-                <a href="../{{book.book_path|urlencode}}" target="_blank" rel="noopener noreferrer">Читать книгу</a>
+      <div class="row">
+        {% for book in books %}
+          <div class="card mb-4 p-3" style="width: 540px;">
+            <div class="row no-gutters">
+              <div class="col-md-4">
+                <img src="../{{book.img_src|urlencode}}" class="card-img" alt="{{book.title}}">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{{book.title}}</h5>
+                  <p class="card-text"><b>Автор:</b> {{book.author}}</p>
+                  <span class="card-text"><b>Жанр:</b> {{book.genres}}</span>
+                  <br>
+                  <a href="../{{book.book_path|urlencode}}" target="_blank" rel="noopener noreferrer">Читать книгу</a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      <hr/>
-      {% endfor %}
+        <hr/>
+        {% endfor %}
+      </div>
     </div>
-  </div>
 
     <script src="../static/js/jquery-3.5.1.slim.min.js"></script>
     <script src="../static/js/bootstrap.bundle.min.js"></script>
