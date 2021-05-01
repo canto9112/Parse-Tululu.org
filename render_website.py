@@ -15,11 +15,11 @@ def get_template():
     return template
 
 
-def get_books():
+def get_books(books_per_page):
     with open('media/JSON.json', 'r') as file:
         json_file = file.read()
     books = json.loads(json_file)
-    return list(chunked(books, 20))
+    return list(chunked(books, books_per_page))
 
 
 def get_rendered_pages(template, books):
@@ -44,9 +44,9 @@ def write_index_html(rendered_page):
         file.write(rendered_page['rendered_page'])
 
 
-def rebuild():
+def rebuild(books_per_page):
     template = get_template()
-    books = get_books()
+    books = get_books(books_per_page)
     rendered_pages = get_rendered_pages(template, books)
     os.makedirs('pages')
     for rendered_page in rendered_pages:
@@ -56,7 +56,9 @@ def rebuild():
 
 
 def main():
-    rebuild()
+    books_per_page = 20
+
+    rebuild(books_per_page)
     server = Server()
     server.watch('template.html', rebuild)
     server.serve(root='.')
